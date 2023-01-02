@@ -1,3 +1,4 @@
+import 'pizza.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -5,13 +6,13 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Builder Design Pattern',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -24,13 +25,13 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Builder Design Pattern'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -49,8 +50,18 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  String _pizzaName = '';
 
-  void _incrementCounter() {
+  ///
+  /// Create the director
+  PizzaDirector director = PizzaDirector();
+
+  ///
+  /// creates the concrete builders
+  PizzaBuilder hawaiianPizzabuilder = HawaiianPizzaBuilder();
+  PizzaBuilder newYorkPizzaBuilder = NewYorkPizzaBuilder();
+
+  void _buildPizza() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below
@@ -58,6 +69,24 @@ class _MyHomePageState extends State<MyHomePage> {
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
       _counter++;
+
+      if (_counter % 2 == 0) {
+        ///
+        /// Build hawaiian Pizza
+        director.setPizzaBuilder(hawaiianPizzabuilder);
+        director.makePizza();
+        Pizza myPizza = director.getPizza();
+        debugPrint(myPizza.toString());
+        _pizzaName = myPizza.toString();
+      } else {
+        ///
+        /// Build new York Pizza
+        director.setPizzaBuilder(newYorkPizzaBuilder);
+        director.makePizza();
+        Pizza myPizza = director.getPizza();
+        debugPrint(myPizza.toString());
+        _pizzaName = myPizza.toString();
+      }
     });
   }
 
@@ -96,18 +125,22 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
-              'You have pushed the button this many times:',
+              'You have just created another pizza: ',
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+            Padding(
+              padding:
+                  const EdgeInsets.all(25), //apply padding to all four sides
+              child: Text(
+                _pizzaName,
+                style: Theme.of(context).textTheme.subtitle2,
+              ),
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
+        onPressed: _buildPizza,
+        tooltip: 'Build Pizza',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
