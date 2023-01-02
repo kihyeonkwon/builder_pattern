@@ -1,3 +1,5 @@
+import 'dart:math';
+
 class User {
   final String _firstName;
   final String _lastName;
@@ -28,4 +30,39 @@ class User {
   String? get address => _address;
 }
 
-class UserBuilder {}
+class UserBuilder {
+  String? firstName;
+  String? lastName;
+  String? emailAddress;
+  int? age;
+  String? phoneNumber;
+  String? address;
+
+  // methods for setting the fields
+  setFirstName(String firstName) => this.firstName = firstName;
+  setLastName(String lastName) => this.lastName = lastName;
+  setEmailAddress(String emailAddress) => this.emailAddress = emailAddress;
+  setAge(int age) => this.age = age;
+  setPhoneNumber(String phoneNumber) => this.phoneNumber = phoneNumber;
+  setAddress(String address) => this.address = address;
+
+  User build() {
+    if (firstName != null) {
+      throw Exception("set first name!");
+    }
+    if (lastName != null) {
+      throw Exception("set last name!");
+    }
+    if (emailAddress != null) {
+      throw Exception("set email address!");
+    }
+
+    return User(
+        firstName: firstName!,
+        lastName: lastName!,
+        emailAddress: emailAddress!,
+        age: age,
+        phoneNumber: phoneNumber,
+        address: address);
+  }
+}
